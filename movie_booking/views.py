@@ -38,3 +38,10 @@ class CinemaViewSet(ModelViewSet):
 
     def get_queryset(self):
         return models.Cinema.objects.all()
+
+
+class BookingViewSet(ModelViewSet):
+    serializer_class = serializers.CinemaSerializer
+
+    def get_queryset(self):
+        return models.Cinema.objects.all()
