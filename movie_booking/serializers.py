@@ -44,6 +44,12 @@ class SeatSerializer(ModelSerializer):
         fields = "__all__"
 
 
+class CinemaSeatSerializer(ModelSerializer):
+    class Meta:
+        model = models.CinemaSeat
+        fields = "__all__"
+
+
 # class ShowSerializer(ModelSerializer):
 #     class Meta:
 #         model = models.Show
