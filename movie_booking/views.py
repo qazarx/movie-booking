@@ -1,5 +1,6 @@
 
 # Create your views here.
+from django.db import transaction
 from django.db.models import Count
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -65,4 +66,12 @@ class BookingViewSet(ModelViewSet):
 
     def get_queryset(self):
         return models.Cinema.objects.all()
+
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        number_of_seats = data.get('number_of_seats', 0)
+        show = data.get('show', '')
+
+
 

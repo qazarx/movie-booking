@@ -76,8 +76,8 @@ class Booking(models.Model):
     class StatusChoices(models.TextChoices):
         BOOKED = 'B', _('Booked'),
         NOT_BOOKED = 'N', _('Not_booked'),
-    numberOfSeats = models.IntegerField()
-    timeStamp = models.DateTimeField()
+    number_of_seats = models.IntegerField()
+    time_stamp = models.DateTimeField(auto_now_add=True)
     status = models.CharField(choices=StatusChoices.choices, max_length=25, default=StatusChoices.BOOKED, )
     show = models.ForeignKey(Show, related_name='bookings', on_delete=models.CASCADE)
 
