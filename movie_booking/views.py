@@ -68,7 +68,7 @@ class ShowViewSet(ModelViewSet):
 class BookingViewSet(ModelViewSet):
     serializer_class = serializers.BookingSerializer
     parser_classes = (FormParser, MultiPartParser, JSONParser)
-    authentication_classes = TokenAuthentication
+    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -83,7 +83,7 @@ class BookingViewSet(ModelViewSet):
 
         if len(cinema_seats) > 0:
 
-            booking_data = {"number_of_seats": len(cinema_seats), "status": "B", "show": show, "user": user}
+            booking_data = {"number_of_seats": len(cinema_seats), "status": "B", "show": show, "user": user.id}
             serializer = self.serializer_class(data=booking_data)
             serializer.is_valid(raise_exception=True)
             booking = serializer.save()
