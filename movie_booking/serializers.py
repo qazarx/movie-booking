@@ -40,7 +40,7 @@ class CinemaSerializer(ModelSerializer):
 
 class SeatSerializer(ModelSerializer):
     class Meta:
-        model = models.CinemaHall
+        model = models.ShowSeat
         fields = "__all__"
 
 

@@ -82,6 +82,7 @@ class Booking(models.Model):
     show = models.ForeignKey(Show, related_name='bookings', on_delete=models.CASCADE)
     user = models.ForeignKey('account.Account', related_name='show_seats', on_delete=models.CASCADE)
 
+
 class ShowSeat(models.Model):
     class StatusChoices(models.TextChoices):
         BOOKED = 'B', _('Booked'),

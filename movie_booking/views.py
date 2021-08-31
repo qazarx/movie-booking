@@ -72,7 +72,7 @@ class BookingViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return models.Cinema.objects.all()
+        return models.Booking.objects.all()
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
@@ -96,7 +96,7 @@ class BookingViewSet(ModelViewSet):
                 show_seat = show_serializer.save()
                 data = serializers.ShowSeatSerializer(show_seat).data
                 show_seat_result.append(data)
-            return Response({"message": "TICKETS BOOKED", "tickets":show_seat_result})
+            return Response({"message": "TICKETS BOOKED", "tickets": show_seat_result})
         else:
             logger.error("Error in cinema creation")
             return Response({"message": "some problem occurred, please check cinema id and show id"}, status=status.HTTP_400_BAD_REQUEST)
