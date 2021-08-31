@@ -58,7 +58,7 @@ Follow the steps below:
 
 4. To get show's seat availability:
 
-    `/api/movie_booking/shows/{show_id}?show_seats=true` GET
+    `api/movie_booking/shows/{show_id}?show_seats=true` GET
 
    
 5. To register:
@@ -84,14 +84,45 @@ Follow the steps below:
    
     use POST form data as example:
    
-   ` email:firstdev@gmail.com`
-   
-    `username:firstdev`
+   ` username:firstdev@gmail.com` (please enter email in front of username, not username, it's a bug with django )
    
     `password:firstdev`
    
-    `repeat_password:firstdev`
-   
     this will generate a token, which needs to send with authenticated requests
    
-7.
+7. To book a ticket
+
+   `api/movie_booking/booking/` POST
+
+   use POST json as example
+
+     ` {
+       "cinema_seats":[2,3],
+       "show":1
+      }`
+   
+   this http request will require authorization, basically add token from login in this format
+
+   `Authorization: Token {token}`
+   
+###Admin panel
+
+1. Go to https://blooming-stream-87221.herokuapp.com/ to access admin panel to get existing data and add new data.
+2. User credentials email-`admin@admin.com` password=`admin` to login
+
+###Architecture Decision
+1. Small application hence no microservices.
+2. Rapid Application Development hence Django and sqlLite3.
+
+
+### Notes
+
+1. Application is stateless.
+2. Service is hosted in public cloud - Heroku
+3. CI/CD is implemented with heroku git, committing with this git from cli will work.
+
+   `https://git.heroku.com/blooming-stream-87221.git`, 
+
+   It will require my heroku login though. Will try to get it up and running from github.
+
+4. Used python inbuilt logging.

@@ -4,12 +4,16 @@ from django.db import transaction
 from django.db.models import Count
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework import status
 from . import models
 from . import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class CityViewSet(ModelViewSet):
@@ -62,7 +66,10 @@ class ShowViewSet(ModelViewSet):
 
 
 class BookingViewSet(ModelViewSet):
-    serializer_class = serializers.CinemaSerializer
+    serializer_class = serializers.BookingSerializer
+    parser_classes = (FormParser, MultiPartParser, JSONParser)
+    authentication_classes = TokenAuthentication
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return models.Cinema.objects.all()
@@ -70,8 +77,29 @@ class BookingViewSet(ModelViewSet):
     @transaction.atomic
     def create(self, request, *args, **kwargs):
         data = request.data
-        number_of_seats = data.get('number_of_seats', 0)
+        cinema_seats = data.get('cinema_seats', [])
+        user = request.user
         show = data.get('show', '')
+
+        if len(cinema_seats) > 0:
+
+            booking_data = {"number_of_seats": len(cinema_seats), "status": "B", "show": show, "user": user}
+            serializer = self.serializer_class(data=booking_data)
+            serializer.is_valid(raise_exception=True)
+            booking = serializer.save()
+            print(booking)
+            show_seat_result = []
+            for i in cinema_seats:
+                show_seats_data = {"status": "B", "cinema_seat": int(i), "show": show, "booking": booking.id}
+                show_serializer = serializers.ShowSeatSerializer(data=show_seats_data)
+                show_serializer.is_valid(raise_exception=True)
+                show_seat = show_serializer.save()
+                data = serializers.ShowSeatSerializer(show_seat).data
+                show_seat_result.append(data)
+            return Response({"message": "TICKETS BOOKED", "tickets":show_seat_result})
+        else:
+            logger.error("Error in cinema creation")
+            return Response({"message": "some problem occurred, please check cinema id and show id"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 

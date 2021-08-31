@@ -80,7 +80,7 @@ class Booking(models.Model):
     time_stamp = models.DateTimeField(auto_now_add=True)
     status = models.CharField(choices=StatusChoices.choices, max_length=25, default=StatusChoices.BOOKED, )
     show = models.ForeignKey(Show, related_name='bookings', on_delete=models.CASCADE)
-
+    user = models.ForeignKey('account.Account', related_name='show_seats', on_delete=models.CASCADE)
 
 class ShowSeat(models.Model):
     class StatusChoices(models.TextChoices):
@@ -90,3 +90,4 @@ class ShowSeat(models.Model):
     cinema_seat = models.ForeignKey(CinemaSeat, related_name='show_seats',on_delete=models.CASCADE)
     show = models.ForeignKey(Show, related_name='show_seats', on_delete=models.CASCADE)
     booking = models.ForeignKey(Booking, related_name='show_seats', on_delete=models.CASCADE)
+
